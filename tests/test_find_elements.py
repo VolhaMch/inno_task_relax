@@ -72,7 +72,7 @@ class TestPosterValidation:
     @allure.title("Navigate to afisha and open film")
     @allure.description("User goes to to Afisha section, open choose one film and check his page is opened")
     @allure.severity(allure.severity_level.CRITICAL)
-    @pytest.mark.parametrize("card_index", [1])
+    @pytest.mark.parametrize("card_index", [1, 2, 3])
     def test_choose_afisha_card_category_and_check_feedback(self, open_main_page, page, card_index):
         base_page = open_main_page
         afisha_page = AfishaPage(page)
