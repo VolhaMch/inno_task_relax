@@ -19,13 +19,13 @@ class BasePage:
         self.page.goto(url, timeout=10000)
 
     def click(self, selector: str):
-        self.page.click(selector)
+        self.page.click(selector, timeout=self.timeout)
 
     def open_restaurants_section(self):
-        self.page.click(BasePage.FOOD_MENU_ITEM)
+        self.page.click(BasePage.FOOD_MENU_ITEM, timeout=self.timeout)
 
     def open_filters(self):
-        self.page.click(BasePage.RESTAURANT_FOOD_MENU_ITEM)
+        self.page.click(BasePage.RESTAURANT_FOOD_MENU_ITEM, timeout=self.timeout)
 
     def choose_luna_page_in_search_line(self):
         self.page.click(BasePage.SEARCH_QUERY, timeout=self.timeout)
@@ -35,11 +35,11 @@ class BasePage:
         assert self.page.url == page_url, f"Expected {page_url}, but got {self.page.url}"
 
     def accept_cookies(self):
-        self.page.click(BasePage.ACCERT_COOKIES)
+        self.page.click(BasePage.ACCERT_COOKIES, timeout=self.timeout)
 
     def fill_text_in_search_line(self, text):
-        self.page.click(BasePage.SEARCH_LINE)
-        self.page.click(BasePage.SEARCH_LINE_INPUT)
+        self.page.click(BasePage.SEARCH_LINE, timeout=self.timeout)
+        self.page.click(BasePage.SEARCH_LINE_INPUT, timeout=self.timeout)
         self.page.type(BasePage.SEARCH_LINE_INPUT, text, timeout=self.timeout)
 
     def get_text(self, selector: str) -> str:
@@ -52,4 +52,4 @@ class BasePage:
         self.page.wait_for_selector(selector, timeout=self.timeout)
 
     def open_afisha_section(self):
-        self.page.click(self.AFISHA_SECTION)
+        self.page.click(self.AFISHA_SECTION, timeout=self.timeout)
