@@ -23,7 +23,12 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                sh 'docker run --rm -v $PWD/allure-results:/app/allure-results relax-tests pytest --alluredir=allure-results'
+                sh '''
+                    docker run --rm \
+                        -v ${WORKSPACE}/allure-results:/app/allure-results \
+                        relax-tests \
+                        pytest --alluredir=/app/allure-results
+                '''
             }
         }
 
@@ -38,15 +43,9 @@ pipeline {
         }
     }
 
-     post {
+    post {
         always {
             cleanWs()
-        }
-        success {
-            echo "✅ Pipeline completed successfully"
-        }
-        failure {
-            echo "❌ Pipeline failed — check logs and Allure report"
         }
     }
 }

@@ -7,9 +7,12 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
+
 RUN pip install --no-cache-dir -r requirements.txt \
     && playwright install --with-deps
 
+RUN mkdir -p /app/allure-results
+
 COPY . .
 
-CMD ["pytest", "-v", "tests/"]
+CMD ["pytest", "--alluredir=/app/allure-results"]
