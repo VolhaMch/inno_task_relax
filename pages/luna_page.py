@@ -6,7 +6,8 @@ class LunaPage(BasePage):
     PHONE_NUMBER = "//span[@class='PhoneLink__number']"
     WORKING_HOURS = "//span[@class='TimeMarker__text']"
     ADDRESS = "//div[@itemprop='address']"
-    IGNORE_FONBET = "//div[@class='kc0d4475']"
+    IGNORE_FONBET = "//div[starts-with(@style, 'background-image')]"
+
 
     def click_phone_button(self):
         self.click(self.PHONE_BUTTON)
@@ -32,7 +33,10 @@ class LunaPage(BasePage):
 
 
     def ignore_fonbet(self):
-        self.click(self.IGNORE_FONBET)
+        locator = self.page.locator(self.IGNORE_FONBET)
+        if locator.is_visible():
+            locator.click(timeout=10000)
+
 
 
 
