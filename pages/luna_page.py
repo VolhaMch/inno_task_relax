@@ -6,6 +6,7 @@ class LunaPage(BasePage):
     PHONE_NUMBER = "//span[@class='PhoneLink__number']"
     WORKING_HOURS = "//span[@class='TimeMarker__text']"
     ADDRESS = "//div[@itemprop='address']"
+    IGNORE_FONBET = "//div[@class='kc0d4475']"
 
     def click_phone_button(self):
         self.click(self.PHONE_BUTTON)
@@ -28,6 +29,11 @@ class LunaPage(BasePage):
             "hours": self.get_working_hours(),
             "address": self.get_address()
         }
+
+
+    def ignore_fonbet(self):
+        self.click(self.IGNORE_FONBET)
+
 
 
 

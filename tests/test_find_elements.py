@@ -26,6 +26,8 @@ class TestValidateSearch:
             base_page.choose_luna_page_in_search_line()
         with allure.step("Verify that 'Luna restaurant page' is opened"):
             luna_page.check_page_url(expected_url)
+        with allure.step("Close ads"):
+            luna_page.ignore_fonbet()
         with allure.step("Click on the phone button to reveal contacts"):
             luna_page.click_phone_button()
         with allure.step("Extract phone, address and working hours of Luna restaurant"):
