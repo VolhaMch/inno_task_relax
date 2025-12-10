@@ -1,7 +1,6 @@
 FROM python:3.11-slim
 
-WORKDIR /app
-# WORKDIR /relax.by
+WORKDIR /relax.by
 
 RUN apt-get update && \
     apt-get install -y wget gnupg && \

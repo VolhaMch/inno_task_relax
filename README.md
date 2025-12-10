@@ -25,15 +25,16 @@ All tests are executed inside Docker containers.
 
 1. Create a custom Jenkins image with Docker CLI
 
-docker build -t jenkins-docker-cli .
+    Go to  jenkins-docker, run command: docker build -t jenkins-docker-cli . 
 
 2. Launch jenkins container
 
-docker run -d --name jenkins -p 8081:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock --user root jenkins-docker-cli
+    Go to root, run command: docker run -d --name jenkins -p 8081:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock --user root jenkins-docker-cli
 
 3. Set up jenkins
-    Open in browser: http://localhost:8081
-    Install recommended plugins, including Allure Jenkins Plugin
+    Open in browser: http://localhost:8081, set up credentials
+    Go to Manage Jenkins → Tools → Allure Commandline installations and choose here Add Allure Commandline
+    Go to plugins, install Allure Jenkins Plugin
     Create a Pipeline:
     Source: GitHub repository, e.g., https://github.com/VolhaMch/inno_task_relax.git
 
