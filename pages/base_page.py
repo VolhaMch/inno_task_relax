@@ -11,12 +11,12 @@ class BasePage:
     RESTAURANT_FOOD_MENU_ITEM = "//a[text()='Рестораны']"
     AFISHA_SECTION = "//a[@title='Афиша, кино']"
 
-    def __init__(self, page, timeout=5000):
+    def __init__(self, page, timeout=20000):
         self.page = page
         self.timeout = timeout
 
     def open_page(self, url):
-        self.page.goto(url, timeout=10000)
+        self.page.goto(url, timeout=15000)
 
     def click(self, selector: str):
         self.page.click(selector, timeout=self.timeout)
