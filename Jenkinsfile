@@ -21,16 +21,29 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
+         stage('Run Tests') {
             steps {
+                sh 'mkdir -p ${WORKSPACE}/allure-results'
                 sh '''
                     docker run --rm \
                         -v ${WORKSPACE}/allure-results:/app/allure-results \
                         relax-tests \
                         pytest --alluredir=/app/allure-results
                 '''
+                sh 'ls -l ${WORKSPACE}/allure-results'
             }
         }
+
+//         stage('Run Tests') {
+//             steps {
+//                 sh '''
+//                     docker run --rm \
+//                         -v ${WORKSPACE}/allure-results:/app/allure-results \
+//                         relax-tests \
+//                         pytest --alluredir=/app/allure-results
+//                 '''
+//             }
+//         }
 
         stage('Allure Report') {
             steps {
