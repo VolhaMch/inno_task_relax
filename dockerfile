@@ -11,7 +11,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt \
     && playwright install --with-deps
 
-RUN mkdir -p /app/allure-results
+# RUN mkdir -p /app/allure-results
 
 COPY . .
 
