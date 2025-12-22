@@ -10,6 +10,7 @@ class BasePage:
     FOOD_MENU_ITEM = "(//div[@title='Еда']//div[contains(text(), 'Еда')])[1]"
     RESTAURANT_FOOD_MENU_ITEM = "//a[text()='Рестораны']"
     AFISHA_SECTION = "//a[@title='Афиша, кино']"
+    NEW_YEAR_SECTION = "//div[contains(text(), 'НГ 2026')]"
 
     def __init__(self, page, timeout=20000):
         self.page = page
@@ -53,3 +54,6 @@ class BasePage:
 
     def open_afisha_section(self):
         self.page.click(self.AFISHA_SECTION, timeout=self.timeout)
+
+    def open_new_year_section(self):
+        self.page.click(self.NEW_YEAR_SECTION, timeout=self.timeout)
