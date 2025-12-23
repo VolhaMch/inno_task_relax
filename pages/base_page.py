@@ -11,6 +11,10 @@ class BasePage:
     RESTAURANT_FOOD_MENU_ITEM = "//a[text()='Рестораны']"
     AFISHA_SECTION = "//a[@title='Афиша, кино']"
     NEW_YEAR_SECTION = "//div[contains(text(), 'НГ 2026')]"
+    FIND_CITY = "//input[@placeholder='поиск по названию']"
+    DEFAULT_CITY = "//span[@title='Минск']"
+    CITY = "div.city"
+
 
     def __init__(self, page, timeout=20000):
         self.page = page
@@ -57,3 +61,20 @@ class BasePage:
 
     def open_new_year_section(self):
         self.page.click(self.NEW_YEAR_SECTION, timeout=self.timeout)
+
+    def fill_city(self, city: str):
+        self.page.click(BasePage.DEFAULT_CITY, timeout=self.timeout)
+        self.page.fill(BasePage.FIND_CITY, city, timeout=self.timeout)
+        city_list_locator = self.page.locator("//div[@class='CityFilter__modalList']")
+        city_list_locator.wait_for(state="visible", timeout=self.timeout)
+        city_list_locator.locator("div").first.click(timeout=self.timeout)
+
+
+    def url_is_valid(self,  expected_url_part):
+        current_url = self.page.url
+        expected_url = f'https://www.relax.by/main/{expected_url_part}'
+        assert current_url == expected_url, f"Expected: {expected_url}, but got: {self.page.url}"
+
+
+
+

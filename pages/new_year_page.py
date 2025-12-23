@@ -1,3 +1,6 @@
+import time
+
+import pytest
 from playwright.async_api import expect
 
 from pages.base_page import BasePage
@@ -17,46 +20,76 @@ class NewYearPage(BasePage):
 
     def __init__(self, page):
         self.page = page
-        self.frame_locator = page.frame_locator("iframe#marquiz__frame_684037f2c0a16f0019668180")
+        self.frame = page.frame_locator("iframe[src*='marquiz']")
 
-    def ignore_new_year_ads(self):
-        locator = self.page.locator(self.CLOSE_NEW_YEAR_ADS)
-        if locator.is_visible():
-            locator.click(timeout=10000)
+    async def start_find_place_for_new_year(self):
+        # show quiz through JS
+        await self.page.evaluate(
+            "() => window.Marquiz && Marquiz.showModal()"
+        )
+
+        await self.page.wait_for_selector(
+            "iframe[src*='marquiz']", state="visible", timeout=45000
+        )
+
+        frame = self.page.frame_locator("iframe[src*='marquiz']")
+
+        start_button = frame.locator("button:has-text('Начать')")
+        await start_button.wait_for(state="visible", timeout=30000)
+        await self.page.screenshot(path="quiz_before_click.png")
+
+        await start_button.click()
+        await self.page.screenshot(path="quiz_after_click.png")
+
+        self.frame = frame
+
+    async def chose_destination_corporativ(self):
+        await self.frame.wait_for_selector(self.CORPORATIVE, state="visible", timeout=20000)
+        await self.frame.locator(self.CORPORATIVE).click()
+
+    async def click_next_button(self):
+        frame = self.frame.wait_for_selector(self.NEXT, state="visible", timeout=20000)
+        await frame.locator(self.NEXT).click()
+
 
     def choose_find_place_for_new_year(self):
-        self.page.locator(self.FIND_PLACE_FOR_NEW_YEAR).click(timeout=10000)
-        self.frame_locator.wait_for()
+        # self.page.wait_for_selector("a.marquiz-pops__body")
+        self.page.locator('//a[@href="#popup:marquiz_684037f2c0a16f0019668180"]').click()
 
-    def start_find_place_for_new_year(self):
-        self.frame_locator.locator(self.START).click(timeout=10000)
 
-    def chose_destination_corporativ(self):
-        self.frame_locator.locator(self.CORPORATIVE, timeout=self.timeout)
 
-    def click_next_button(self):
-        self.frame_locator.click(self.NEXT, timeout=self.timeout)
 
     def choose_outside_city_place(self):
-        self.frame_locator.click(self.PLACE_OUTSIDE_CITY, timeout=self.timeout)
+        frame = self.frame.wait_for_selector(self.PLACE_OUTSIDE_CITY)
+        frame.locator(self.PLACE_OUTSIDE_CITY).click()
 
-    def input_date(self, date):
-        self.frame_locator.get_by_placeholder('19 или 26 декабря').fill(date)
+    def input_date(self,  date):
+        self.frame.get_by_placeholder('19 или 26 декабря').fill(date)
 
     def choose_cost_500_more(self):
-        self.frame_locator.click(self.CHOSE_COST_500_MORE, timeout=self.timeout)
+        self.frame.click(self.CHOSE_COST_500_MORE, timeout=self.timeout)
 
     def input_city(self, city):
-        self.frame_locator.get_by_placeholder('Минск').fill(city)
+        self.frame.get_by_placeholder('Минск').fill(city)
 
     def need_show(self):
-        self.frame_locator.click(self.NEED_SHOW, timeout=self.timeout)
+        self.frame.click(self.NEED_SHOW, timeout=self.timeout)
 
     def click_button_last(self):
-        self.frame_locator.click(self.LAST_STEP, timeout=self.timeout)
+        self.frame.click(self.LAST_STEP, timeout=self.timeout)
 
     def agreement_page_is_visible(self):
-        locator = self.frame_locator.locator(self.AGREE, timeout=self.timeout)
+        locator = self.frame.locator(self.AGREE, timeout=self.timeout)
         expect(locator).to_be_visible()
+
+    def ignore_new_year_ads(self):
+        locator = self.page.locator(
+            self.CLOSE_NEW_YEAR_ADS
+        )
+        locator.wait_for(timeout=5000)
+        locator.click(force=True)
+
+
+
 
 
