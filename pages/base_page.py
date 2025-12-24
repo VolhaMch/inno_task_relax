@@ -1,4 +1,4 @@
-from playwright.sync_api import Page
+from playwright.sync_api import Page, expect
 from utils.config import BASE_URL
 
 class BasePage:
@@ -13,7 +13,7 @@ class BasePage:
     NEW_YEAR_SECTION = "//div[contains(text(), 'НГ 2026')]"
     FIND_CITY = "//input[@placeholder='поиск по названию']"
     DEFAULT_CITY = "//span[@title='Минск']"
-    CITY = "div.city"
+    NEWS_SECTION = "//div[@class='ArticleItem JournalWidget__item']"
 
 
     def __init__(self, page, timeout=20000):
@@ -74,6 +74,17 @@ class BasePage:
         current_url = self.page.url
         expected_url = f'https://www.relax.by/main/{expected_url_part}'
         assert current_url == expected_url, f"Expected: {expected_url}, but got: {self.page.url}"
+
+
+    def assert_news_matches_selected_city(self, city):
+        items = self.page.locator("div.ArticleItem.JournalWidget__item")
+        count = items.count()
+        for i in range(count):
+            text = items.nth(i).inner_text().strip()
+            assert f"Новости {city}а".lower() in text.lower(), f"Element {i} does not contain 'новости {city}а'. Got: {text}"
+
+
+
 
 
 

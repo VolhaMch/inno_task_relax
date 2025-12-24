@@ -45,8 +45,8 @@ class TestValidateSearch:
 
 
 class TestNavigationMenu:
-    @allure.title("")
-    @allure.description("")
+    @allure.title("Validate url and chosen city are the same")
+    @allure.description("When user check city in location page updates and new url ending with a the chosen city name")
     @allure.severity(allure.severity_level.CRITICAL)
     @pytest.mark.parametrize("city, url_part",[("Брест", "brest/"),("Волковыск", "volkovysk/"),("Бобруйск", "bobrujsk/")])
     def test_find_place_for_new_year(self, open_main_page, page, city, url_part):
@@ -54,6 +54,17 @@ class TestNavigationMenu:
         base_page.fill_city(city)
         base_page.url_is_valid(url_part)
 
+    @allure.title("Validate that news matches the selected city")
+    @allure.description(
+        "When a user selects a city in the location menu, all news in the section must relate only to that chosen city."
+    )
+    @allure.severity(allure.severity_level.CRITICAL)
+    @pytest.mark.parametrize("city",
+                             [("Брест")])
+    def test_find_place_for_new_year(self, open_main_page, page, city):
+        base_page = open_main_page
+        base_page.fill_city(city)
+        base_page.assert_news_matches_selected_city(city)
 
 
 
