@@ -35,5 +35,6 @@ def open_main_page(page):
     with allure.step("Open the main page"):
         base_page.open_page(BASE_URL)
     with allure.step("Accept cookies"):
+        base_page.cookies_is_visible()
         base_page.accept_cookies()
     return base_page

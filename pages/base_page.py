@@ -14,20 +14,19 @@ class BasePage:
     FIND_CITY = "//input[@placeholder='поиск по названию']"
     DEFAULT_CITY = "//span[@title='Минск']"
     NEWS_SECTION = "//div[@class='ArticleItem JournalWidget__item']"
+    COOKIES_BANNER = "//div[@class='CookiesNotificationBy__wrapper']"
 
 
     def __init__(self, page, timeout=20000):
         self.page = page
         self.timeout = timeout
 
+
     def open_page(self, url):
         self.page.goto(url, timeout=15000)
 
     def click(self, selector: str):
         self.page.click(selector, timeout=self.timeout)
-
-    def open_restaurants_section(self):
-        self.page.click(BasePage.FOOD_MENU_ITEM, timeout=self.timeout)
 
     def open_filters(self):
         self.page.click(BasePage.RESTAURANT_FOOD_MENU_ITEM, timeout=self.timeout)
@@ -39,8 +38,6 @@ class BasePage:
         self.page.wait_for_url(page_url, timeout=self.timeout)
         assert self.page.url == page_url, f"Expected {page_url}, but got {self.page.url}"
 
-    def accept_cookies(self):
-        self.page.click(BasePage.ACCERT_COOKIES, timeout=self.timeout)
 
     def fill_text_in_search_line(self, text):
         self.page.click(BasePage.SEARCH_LINE, timeout=self.timeout)
@@ -55,9 +52,6 @@ class BasePage:
 
     def wait_for_element(self, selector: str):
         self.page.wait_for_selector(selector, timeout=self.timeout)
-
-    def open_afisha_section(self):
-        self.page.click(self.AFISHA_SECTION, timeout=self.timeout)
 
     def open_new_year_section(self):
         self.page.click(self.NEW_YEAR_SECTION, timeout=self.timeout)
@@ -82,6 +76,30 @@ class BasePage:
         for i in range(count):
             text = items.nth(i).inner_text().strip()
             assert f"Новости {city}а".lower() in text.lower(), f"Element {i} does not contain 'новости {city}а'. Got: {text}"
+
+    @property
+    def restaurants_section(self):
+        return self.page.locator(BasePage.FOOD_MENU_ITEM)
+
+    def open_restaurants_section(self):
+        self.restaurants_section.click(timeout=self.timeout)
+
+    @property
+    def cookies(self):
+        return self.page.locator(BasePage.COOKIES_BANNER)
+
+    def cookies_is_visible(self):
+        assert self.cookies.is_visible(), "Cookies banner is not visible"
+
+    def accept_cookies(self):
+        self.page.click(BasePage.ACCERT_COOKIES, timeout=self.timeout)
+
+    @property
+    def afisha_section(self):
+        return self.page.locator(self.AFISHA_SECTION).first
+
+    def open_afisha_section(self):
+        self.afisha_section.click(timeout=self.timeout)
 
 
 
