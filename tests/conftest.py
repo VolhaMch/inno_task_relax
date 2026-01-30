@@ -5,7 +5,7 @@ import pytest
 from playwright.sync_api import sync_playwright
 
 from pages.base_page import BasePage
-from utils.config import BASE_URL
+from config.config import BASE_URL
 
 
 @pytest.fixture(scope="session")

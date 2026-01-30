@@ -8,7 +8,7 @@ from pages.restaurants.luna_page import LunaPage
 from pages.movie_page import MoviePage
 from pages.new_year_page import NewYearPage
 from pages.restaurants.restaurant_page import RestaurantPage
-from utils.config import LUNA_URL, RESTAURANTS_URL
+from config.config import LUNA_URL, RESTAURANTS_URL
 
 
 class TestFiltersValidation:
