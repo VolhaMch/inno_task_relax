@@ -38,3 +38,10 @@ def open_main_page(page):
         base_page.cookies_is_visible()
         base_page.accept_cookies()
     return base_page
+
+@pytest.fixture
+def open_main_page_with_no_cookies(page):
+    base_page = BasePage(page)
+    with allure.step("Open the main page"):
+        base_page.open_page(BASE_URL)
+    return base_page

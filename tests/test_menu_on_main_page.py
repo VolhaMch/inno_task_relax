@@ -4,9 +4,7 @@ import allure
 import pytest
 
 from pages.afisha_page import AfishaPage
-from pages.restaurants.luna_page import LunaPage
 from pages.movie_page import MoviePage
-from pages.new_year_page import NewYearPage
 from pages.restaurants.restaurant_page import RestaurantPage
 from config.config import LUNA_URL, RESTAURANTS_URL
 
@@ -62,3 +60,14 @@ class TestPosterValidation:
             movie_page.should_be_correct_film(chosen_film_title)
         with allure.step('Check that feedback section is presented'):
             movie_page.should_have_feedback_section()
+
+class TestPopularonSite:
+    @allure.title("Navigate to Popular section on site")
+    @allure.description("Verify that all items in the Popular section open correct pages and navigation works correctly")
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_section_popular_on_site(self, open_main_page_with_no_cookies, page):
+        base_page = open_main_page_with_no_cookies
+        with allure.step("Accept cookies"):
+            base_page.accept_cookies_if_visible()
+        with allure.step("Navigate to all sections of popular on site"):
+            base_page.click_popular_section_items()

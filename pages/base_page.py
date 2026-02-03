@@ -1,3 +1,5 @@
+import re
+
 from playwright.sync_api import Page, expect
 from config.config import BASE_URL
 from utils.logger import get_logger
@@ -16,6 +18,8 @@ class BasePage:
     DEFAULT_CITY = "//span[@title='Минск']"
     NEWS_SECTION = "//div[@class='ArticleItem JournalWidget__item']"
     COOKIES_BANNER = "//div[@class='CookiesNotificationBy__wrapper']"
+    POPULAR_SECTION = "a.PopularWidget__item"
+
 
 
     def __init__(self, page, timeout=20000):
@@ -44,7 +48,6 @@ class BasePage:
         self.log.info(f"Check {page_url} is valid")
         self.page.wait_for_url(page_url, timeout=self.timeout)
         assert self.page.url == page_url, f"Expected {page_url}, but got {self.page.url}"
-
 
     def fill_text_in_search_line(self, text):
         self.log.info(f"Fill in {text}")
@@ -83,7 +86,6 @@ class BasePage:
         expected_url = f'https://www.relax.by/main/{expected_url_part}'
         assert current_url == expected_url, f"Expected: {expected_url}, but got: {self.page.url}"
 
-
     def assert_news_matches_selected_city(self, city):
         self.log.info(f"Assert news matches {city} city")
         items = self.page.locator("div.ArticleItem.JournalWidget__item")
@@ -106,11 +108,20 @@ class BasePage:
 
     def cookies_is_visible(self):
         self.log.info(f"Check if cookies is visible")
-        assert self.cookies.is_visible(), "Cookies banner is not visible"
+        return self.cookies.is_visible()
 
     def accept_cookies(self):
-        self.log.info(f"Click accept cookies")
+        self.log.info("Accept cookies")
         self.page.click(BasePage.ACCERT_COOKIES, timeout=self.timeout)
+
+    def accept_cookies_if_visible(self):
+        self.log.info("Check and accept cookies if visible")
+        try:
+            if self.cookies.is_visible(timeout=2000):
+                self.page.click(BasePage.ACCERT_COOKIES, timeout=self.timeout)
+                self.log.info("Cookies accepted")
+        except TimeoutError:
+            self.log.info("Cookies banner not shown")
 
     @property
     def afisha_section(self):
@@ -120,6 +131,33 @@ class BasePage:
         self.log.info(f"Open afisha section")
         self.afisha_section.click(timeout=self.timeout)
 
+    def click_popular_section_items(self):
+        patterns = [
+            r"/wedding-restaurants/",
+            r"afisha",
+            r"/city/",
+            r"/ent/",
+            r"/corporate/",
+            r"/vse-dlya-detej/",
+        ]
+
+
+        url_pattern = re.compile("|".join(patterns))
+        self.log.info(f"Click popular section items")
+        items = self.page.locator(BasePage.POPULAR_SECTION)
+        count = items.count()
+
+        assert count > 0, "Popular section is empty"
+
+        for i in range(count):
+            with self.page.expect_navigation():
+                items.nth(i).click()
+                current_url = self.page.url
+                self.log.info(f"Opened page URL: {current_url}")
+
+            expect(self.page).to_have_url(url_pattern)
+            self.page.go_back()
+            self.accept_cookies_if_visible()
 
 
 
